@@ -6,7 +6,7 @@ BeConSUlt is a mobile application designed to help Sabancı University students 
 ## Main Purpose - What problem does it solve?
 The main purpose of the app is to create a platform where students can share and find reliable feedback about lectures and instructors anonymously. Currently, information is often scattered across private chats or based on friend recommendation, making it difficult for students, especially newcomers, to make informed decisions. By collecting data from former students, peer-generated insights in one place, the app helps students better understand course difficuty, teaching styles, and workload before enrolling which provides to make more efficient course schedule and avoiding mismatched expectations.
 
-## Group Members
+## Group Members & Responsibilities
 
 | Name | Student ID | Responsibility |
 |------|------|------------------|
