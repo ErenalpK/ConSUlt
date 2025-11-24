@@ -113,7 +113,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                /// ---------- USERNAME ----------
+                
+                //Username
                 _buildLabel("User Name"),
                 TextFormField(
                   controller: _nameController,
@@ -123,7 +124,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
                 const SizedBox(height: 20),
 
-                /// ---------- EMAIL ----------
+                //Email
                 _buildLabel("Your Email"),
                 TextFormField(
                   controller: _emailController,
@@ -135,7 +136,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
                 const SizedBox(height: 20),
 
-                /// ---------- PASSWORD ----------
+                //Password
                 _buildLabel("Create a Password"),
                 TextFormField(
                   controller: _passwordController,
@@ -154,7 +155,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
                 const SizedBox(height: 20),
 
-                /// ---------- CONFIRM PASSWORD ----------
+                //password confirmation
                 _buildLabel("Confirm Password"),
                 TextFormField(
                   controller: _confirmController,
@@ -173,7 +174,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
                 const SizedBox(height: 35),
 
-                /// ---------- REGISTER BUTTON ----------
+            
                 TweenAnimationBuilder(
                   duration: const Duration(milliseconds: 120),
                   tween: Tween<double>(
@@ -216,7 +217,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 
-  // ---------- LABEL ----------
+  
   Widget _buildLabel(String text) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 6.0),
@@ -224,7 +225,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 
-  // ---------- INPUT FIELD DECORATION ----------
+  
   InputDecoration _buildInputDecoration(String hint) {
     return InputDecoration(
       hintText: hint,
