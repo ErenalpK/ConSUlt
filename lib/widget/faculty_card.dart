@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../utils/styles.dart'; // Senin renklerin buradan geliyor
+import '../utils/styles.dart'; 
 
 class FacultyCard extends StatelessWidget {
   final String facultyName;
@@ -21,7 +21,7 @@ class FacultyCard extends StatelessWidget {
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColors.surface,
           surfaceTintColor: Colors.white,
-          foregroundColor: AppColors.primary, // Tıklama efekti Mor
+          foregroundColor: AppColors.primary, 
           shadowColor: Colors.transparent,
           elevation: 0,
           padding: EdgeInsets.zero,
@@ -37,7 +37,7 @@ class FacultyCard extends StatelessWidget {
               padding: const EdgeInsets.only(bottom: 8.0, top: 4.0, left: 4.0),
               child: Text(
                 facultyName,
-                style: AppTextStyles.cardTitle, // Senin font stilin
+                style: AppTextStyles.cardTitle, 
               ),
             ),
 
