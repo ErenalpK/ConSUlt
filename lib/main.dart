@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'utils/styles.dart'; // Renk ve Font ayarları için
+import 'utils/styles.dart'; 
 
-// Ekranlarımızı içeri alıyoruz (Import)
+
 import 'screens/course_detail_screen.dart';
 import 'screens/course_comments_screen.dart';
 import 'screens/add_review_screen.dart';
@@ -17,13 +17,13 @@ class ConsultApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'ConSUlt',
-      debugShowCheckedModeBanner: false, // Sağ üstteki 'Debug' yazısını kaldırır
+      debugShowCheckedModeBanner: false, 
 
-      // --- GENEL TEMA AYARLARI ---
+      
       theme: ThemeData(
         primaryColor: AppColors.primary,
         scaffoldBackgroundColor: AppColors.background,
-        // Tüm uygulamada 'AppFont' (Roboto) geçerli olsun:
+        
         fontFamily: AppTextStyles.fontFamily,
 
         colorScheme: ColorScheme.fromSwatch().copyWith(
@@ -31,7 +31,6 @@ class ConsultApp extends StatelessWidget {
           secondary: AppColors.secondary,
         ),
 
-        // AppBar varsayılan stili
         appBarTheme: const AppBarTheme(
           backgroundColor: AppColors.surface,
           elevation: 0,
@@ -45,7 +44,7 @@ class ConsultApp extends StatelessWidget {
           ),
         ),
 
-        // Buton varsayılan stili
+       
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
             backgroundColor: AppColors.primary,
@@ -58,18 +57,17 @@ class ConsultApp extends StatelessWidget {
         ),
       ),
 
-      // --- NAVİGASYON ROTALARI (Named Routes) ---
-      // Uygulama ilk açıldığında hangi rota (sayfa) gelsin?
+     
       initialRoute: '/',
 
       routes: {
-        // Ana Sayfa: Ders Detayı
+       
         '/': (context) => const CourseDetailScreen(),
 
-        // Yorumlar Sayfası
+       
         '/course_comments': (context) => const CourseCommentsScreen(),
 
-        // Yorum Ekleme Formu
+      
         '/add_review': (context) => const AddReviewScreen(),
       },
     );
