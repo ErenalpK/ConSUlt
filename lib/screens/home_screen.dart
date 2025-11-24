@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../utils/styles.dart';
-import '../widgets/faculty_card.dart'; // Az önce oluşturduğumuz widget
+import '../widgets/faculty_card.dart'; 
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -37,7 +37,7 @@ class _HomeScreenState extends State<HomeScreen> {
           children: <Widget>[
             const SizedBox(height: 20),
 
-            // --- Arama Çubuğu ---
+        
             Padding(
               padding: const EdgeInsets.only(bottom: 20.0),
               child: TextField(
@@ -60,7 +60,6 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
 
-            // --- Fakülte Listesi (Otomatik Oluşur) ---
             ...faculties.map((facultyName) {
               return FacultyCard(
                 facultyName: facultyName,
@@ -69,7 +68,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   Navigator.pushNamed(
                       context,
                       '/faculty_courses',
-                      arguments: facultyName // Hangi fakülteye tıklandığını gönderiyoruz
+                      arguments: facultyName 
                   );
                 },
               );
@@ -78,7 +77,6 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
 
-      // Alt Menü (Senin CourseDetail sayfasındakiyle tutarlı olması için)
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: 0, // Home seçili
         selectedItemColor: AppColors.primary,
