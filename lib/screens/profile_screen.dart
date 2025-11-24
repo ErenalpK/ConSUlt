@@ -6,26 +6,25 @@ import '../utils/styles.dart';
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
-  // Ayar satırlarını oluşturan yardımcı widget (Senin attığın koddaki yapı)
   Widget _buildSettingTile({
     required String title,
     IconData? icon,
     String? trailingText,
     required VoidCallback onTap,
-    Color color = AppColors.textPrimary, // Varsayılan yazı rengi
+    Color color = AppColors.textPrimary, 
   }) {
     return SizedBox(
       width: double.infinity,
       child: ElevatedButton(
         onPressed: onTap,
         style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.surface, // Beyaz arka plan
-          foregroundColor: color.withOpacity(0.1), // Tıklama efekti
+          backgroundColor: AppColors.surface, 
+          foregroundColor: color.withOpacity(0.1), 
           elevation: 0,
           shadowColor: Colors.transparent,
           padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
           shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.zero, // Köşeli (Liste görünümü için)
+            borderRadius: BorderRadius.zero, 
           ),
         ),
         child: Row(
@@ -41,7 +40,7 @@ class ProfileScreen extends StatelessWidget {
                     fontSize: 16,
                     color: color,
                     fontWeight: FontWeight.normal,
-                    fontFamily: AppTextStyles.fontFamily // Senin fontun
+                    fontFamily: AppTextStyles.fontFamily 
                 ),
               ),
             ),
@@ -68,11 +67,11 @@ class ProfileScreen extends StatelessWidget {
     }
 
     return Scaffold(
-      backgroundColor: AppColors.surface, // Beyaz arka plan
+      backgroundColor: AppColors.surface, 
       appBar: AppBar(
         backgroundColor: AppColors.surface,
         elevation: 0,
-        automaticallyImplyLeading: false, // Geri butonu yok
+        automaticallyImplyLeading: false, 
         title: const Text('Settings', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
         centerTitle: false,
       ),
@@ -81,13 +80,12 @@ class ProfileScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
 
-            // --- KULLANICI BİLGİLERİ BÖLÜMÜ ---
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  // Yuvarlak Profil İkonu
+                  
                   Container(
                     width: 80,
                     height: 80,
@@ -99,29 +97,27 @@ class ProfileScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 10),
 
-                  // İsim
+                  
                   const Text(
                     'Assensio',
                     style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, fontFamily: AppTextStyles.fontFamily),
                   ),
-                  // Email
+                  
                   Text(
                     'marco_asensio@email.com',
                     style: TextStyle(fontSize: 16, color: Colors.grey.shade600, fontFamily: AppTextStyles.fontFamily),
                   ),
                   const SizedBox(height: 15),
 
-                  // "Edit Profile" Butonu (Senin kodundaki tasarımın aynısı)
                   ElevatedButton(
                     onPressed: () {
-                      // Named Route ile Edit Profile sayfasına git
                       Navigator.pushNamed(context, '/edit_profile');
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.surface,
-                      foregroundColor: AppColors.primary, // Mor yazı
+                      foregroundColor: AppColors.primary, 
                       elevation: 0,
-                      side: const BorderSide(color: AppColors.primary), // Mor çerçeve
+                      side: const BorderSide(color: AppColors.primary), 
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                     ),
@@ -137,7 +133,6 @@ class ProfileScreen extends StatelessWidget {
 
             const Divider(height: 1, thickness: 1),
 
-            // --- Account Bölümü ---
             const Padding(
               padding: EdgeInsets.only(left: 16.0, top: 16.0, bottom: 8.0),
               child: Text(
@@ -184,7 +179,6 @@ class ProfileScreen extends StatelessWidget {
 
             const Divider(height: 1, thickness: 1),
 
-            // --- Privacy & Support Bölümü ---
             const Padding(
               padding: EdgeInsets.only(left: 16.0, top: 16.0, bottom: 8.0),
               child: Text(
@@ -204,11 +198,10 @@ class ProfileScreen extends StatelessWidget {
 
             const Divider(height: 1, thickness: 1),
 
-            // --- Log Out ---
             _buildSettingTile(
               title: 'Log Out',
               icon: Icons.logout,
-              color: AppColors.error, // Kırmızı renk (styles.dart'tan)
+              color: AppColors.error,
               onTap: () {
                 Navigator.popUntil(context, ModalRoute.withName('/home'));
                 },
@@ -221,11 +214,11 @@ class ProfileScreen extends StatelessWidget {
 
 
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: 3, // Profile sekmesi seçili
+        currentIndex: 3, 
         selectedItemColor: AppColors.primary,
         unselectedItemColor: Colors.grey,
         type: BottomNavigationBarType.fixed,
-        showSelectedLabels: true, // Senin görselinde label yoktu, kapattım
+        showSelectedLabels: true, 
         onTap: (index) {
           if (index == 0) Navigator.pushReplacementNamed(context, '/home');
           if (index==1) Navigator.pushReplacementNamed(context, '/favorites');
