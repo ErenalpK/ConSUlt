@@ -24,7 +24,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     return Scaffold(
       backgroundColor: AppColors.background,
 
-      /// 🔹 Aşağıdaki bottom navigation sizin widgets klasöründeki custom navbar
+      
       bottomNavigationBar: const CustomBottomNavBar(currentIndex: 3),
 
       appBar: AppBar(
@@ -141,12 +141,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
   }
 
-  // ---------- Reusable Label ----------
+  
   Widget _buildLabel(String label) {
     return Text(label, style: AppTextStyles.sectionTitle.copyWith(fontSize: 14));
   }
 
-  // ---------- Reusable TextField ----------
+  
   Widget _buildTextField({
     required TextEditingController controller,
     required String hint,
