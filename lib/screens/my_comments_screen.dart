@@ -10,7 +10,7 @@ class MyCommentsScreen extends StatefulWidget {
 }
 
 class _MyCommentsScreenState extends State<MyCommentsScreen> {
-  /// ÖRNEK YORUMLAR — backend olmadığı için dummy data
+  
   List<CourseDetail> myComments = [
     CourseDetail(
       faculty: "FENS",
@@ -50,7 +50,7 @@ class _MyCommentsScreenState extends State<MyCommentsScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              /// --------- PAGE TITLE ---------
+              
               Center(
                 child: Text(
                   "ConSUlt",
@@ -63,7 +63,7 @@ class _MyCommentsScreenState extends State<MyCommentsScreen> {
 
               const SizedBox(height: 20),
 
-              /// --------- COMMENT LIST ---------
+              
               Expanded(
                 child: ListView.builder(
                   itemCount: myComments.length,
@@ -84,20 +84,20 @@ class _MyCommentsScreenState extends State<MyCommentsScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              /// FACULTY
+                              
                               Text(
                                 course.faculty,
                                 style: AppTextStyles.caption.copyWith(fontSize: 12),
                               ),
                               const SizedBox(height: 4),
 
-                              /// COURSE CODE
+                              
                               Text(
                                 course.code,
                                 style: AppTextStyles.cardTitle,
                               ),
 
-                              /// COURSE NAME
+                              
                               Text(
                                 course.name,
                                 style: AppTextStyles.body.copyWith(
@@ -108,7 +108,7 @@ class _MyCommentsScreenState extends State<MyCommentsScreen> {
 
                               const SizedBox(height: 10),
 
-                              /// USER COMMENT (Description)
+                              
                               Text(
                                 course.description,
                                 style: AppTextStyles.body,
@@ -118,11 +118,11 @@ class _MyCommentsScreenState extends State<MyCommentsScreen> {
 
                               const SizedBox(height: 12),
 
-                              /// DATE + ACTIONS
+                              
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  /// TEMPORARY DATE
+                                  
                                   Text(
                                     "Nov 3, 2025",
                                     style: AppTextStyles.caption,
@@ -130,7 +130,7 @@ class _MyCommentsScreenState extends State<MyCommentsScreen> {
 
                                   Row(
                                     children: [
-                                      /// EDIT BUTTON
+                                      
                                       IconButton(
                                         onPressed: () {},
                                         icon: const Icon(
@@ -140,7 +140,7 @@ class _MyCommentsScreenState extends State<MyCommentsScreen> {
                                         ),
                                       ),
 
-                                      /// DELETE BUTTON
+                                      
                                       IconButton(
                                         onPressed: () {
                                           setState(() {
