@@ -33,8 +33,8 @@ class CustomBottomNavBar extends StatelessWidget {
     return BottomNavigationBar(
       currentIndex: currentIndex,
       onTap: (index) => _onTap(context, index),
-      selectedItemColor: AppColors.primary,     // 🟣 MOR
-      unselectedItemColor: Colors.grey,         // ⚪ GRİ (beyaza yakın)
+      selectedItemColor: AppColors.primary,     
+      unselectedItemColor: Colors.grey,
       showSelectedLabels: false,
       showUnselectedLabels: false,
       type: BottomNavigationBarType.fixed,
