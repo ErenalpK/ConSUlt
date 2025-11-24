@@ -1,5 +1,6 @@
 import 'package:consult/screens/my_comments_screen.dart';
 import 'package:flutter/material.dart';
+import 'screens/splash_screen.dart';
 
 // Screens
 import 'screens/login_screen.dart';
@@ -26,10 +27,11 @@ class ConsultApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
 
-      initialRoute: '/login',
+      initialRoute: '/splash',
 
       routes: {
         
+        '/splash': (context) => const SplashScreen(),
         '/signup': (context) => const SignUpScreen(),
         '/login': (context) => const LoginScreen(),
 
