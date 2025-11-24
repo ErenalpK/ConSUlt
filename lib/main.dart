@@ -29,25 +29,25 @@ class ConsultApp extends StatelessWidget {
       initialRoute: '/login',
 
       routes: {
-        // -------- AUTH --------
+        
+        '/signup': (context) => const SignUpScreen(),
         '/login': (context) => const LoginScreen(),
 
-        // -------- MAIN NAVIGATION --------
+       
         '/home': (context) => const HomeScreen(),
         '/favorites': (context) => const FavoriteCoursesScreen(),
         '/profile': (context) => const ProfileScreen(),
 
-        // -------- FACULTY / COURSES --------
+        
         '/faculty_courses': (context) => const FacultyCoursesScreen(),
         '/course_detail': (context) => const CourseDetailScreen(),
 
-        // -------- COMMENTS --------
+       
         '/course_comments': (context) => const CourseCommentsScreen(),
         '/add_review': (context) => const AddReviewScreen(),
         '/edit_profile': (context) => const EditProfileScreen(),
 
-        '/signup': (context) => const SignUpScreen(),
-        // -------- PLACEHOLDER (MY COMMENTS) --------
+      
         '/my_comments': (context) => const MyCommentsScreen()
       },
     );
