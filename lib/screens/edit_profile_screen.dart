@@ -24,7 +24,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     return Scaffold(
       backgroundColor: AppColors.background,
 
-      
+
       bottomNavigationBar: const CustomBottomNavBar(currentIndex: 3),
 
       appBar: AppBar(
@@ -68,30 +68,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     controller: _fullname,
                     hint: "Enter your full name",
                     validator: (v) => v == null || v.isEmpty ? "Full name required" : null,
-                  ),
-
-                  const SizedBox(height: 20),
-
-                  /// -------- Email --------
-                  _buildLabel("Email"),
-                  _buildTextField(
-                    controller: _email,
-                    hint: "Enter your email",
-                    validator: (v) {
-                      if (v == null || v.isEmpty) return "Email required";
-                      if (!v.contains("@")) return "Invalid email";
-                      return null;
-                    },
-                  ),
-
-                  const SizedBox(height: 20),
-
-                  /// -------- Phone Number --------
-                  _buildLabel("Phone Number"),
-                  _buildTextField(
-                    controller: _phone,
-                    hint: "+90 (555) 555 5555",
-                    validator: (v) => v == null || v.isEmpty ? "Phone number required" : null,
                   ),
 
                   const SizedBox(height: 20),
@@ -141,12 +117,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
   }
 
-  
+
   Widget _buildLabel(String label) {
     return Text(label, style: AppTextStyles.sectionTitle.copyWith(fontSize: 14));
   }
 
-  
+
   Widget _buildTextField({
     required TextEditingController controller,
     required String hint,
