@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import '../utils/styles.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -19,7 +20,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   bool _showPassword1 = false;
   bool _showPassword2 = false;
-  bool _isPressed = false;
   bool _submitted = false;
   bool _isLoading = false;
 
@@ -69,54 +69,78 @@ class _SignUpScreenState extends State<SignUpScreen> {
     return null;
   }
 
-Future<void> _handleSubmit() async {
-  setState(() => _submitted = true);
+  Future<void> _handleSubmit() async {
+    setState(() => _submitted = true);
 
-  if (!_formKey.currentState!.validate()) return;
+    if (!_formKey.currentState!.validate()) return;
 
-  try {
-    await FirebaseAuth.instance.createUserWithEmailAndPassword(
-      email: _emailController.text.trim(),
-      password: _passwordController.text.trim(),
-    );
+    setState(() => _isLoading = true);
 
-    if (!mounted) return;
+    try {
+      // 1️⃣ AUTH
+      UserCredential userCredential =
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
+      );
 
-    showDialog(
-      context: context,
-      builder: (_) => AlertDialog(
-        title: const Text("Success"),
-        content: const Text("Account created successfully!"),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context); 
-              Navigator.pop(context); 
-            },
-            child: const Text("OK"),
-          )
-        ],
-      ),
-    );
-  } on FirebaseAuthException catch (e) {
-    String message = "Something went wrong";
+      final user = userCredential.user;
+      if (user == null) throw Exception("User creation failed");
 
-    if (e.code == 'email-already-in-use') {
-      message = "This email is already registered";
-    } else if (e.code == 'weak-password') {
-      message = "Password is too weak";
-    } else if (e.code == 'invalid-email') {
-      message = "Invalid email address";
+      try {
+        await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .set({
+        'userName': _nameController.text.trim(),
+        'userEmail': user.email, 
+        'createdBy': user.uid,
+        'createdAt': FieldValue.serverTimestamp(),
+        'profilePhoto': null,
+        });
+      } catch (e) {
+        debugPrint("FIRESTORE ERROR: $e");
+      }
+
+      if (!mounted) return;
+
+      showDialog(
+        context: context,
+        builder: (_) => AlertDialog(
+          title: const Text("Success"),
+          content: const Text("Account created successfully!"),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+                Navigator.pop(context);
+              },
+              child: const Text("OK"),
+            )
+          ],
+        ),
+      );
+    } on FirebaseAuthException catch (e) {
+      String message = "Something went wrong";
+
+      if (e.code == 'email-already-in-use') {
+        message = "This email is already registered";
+      } else if (e.code == 'weak-password') {
+        message = "Password is too weak";
+      } else if (e.code == 'invalid-email') {
+        message = "Invalid email address";
+      }
+
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(message)));
+    } finally {
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
     }
-
-    if (!mounted) return;
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message)),
-    );
   }
-}
-
 
   @override
   Widget build(BuildContext context) {
