@@ -47,13 +47,24 @@ class FacultyCoursesScreen extends StatelessWidget {
           final Map<String, List<QueryDocumentSnapshot>> grouped = {};
 
           for (var doc in snapshot.data!.docs) {
-            final dept = doc['department'];
-            grouped.putIfAbsent(dept, () => []).add(doc);
+            // Sadece büyük harfli document ID'lere sahip dersleri al
+            if (doc.id == doc.id.toUpperCase()) {
+              final dept = doc['department'];
+              grouped.putIfAbsent(dept, () => []).add(doc);
+            }
           }
 
           return ListView(
             padding: const EdgeInsets.all(16),
             children: grouped.entries.map((entry) {
+              // Her departman için dersleri code field'ına göre sırala
+              final sortedCourses = List<QueryDocumentSnapshot>.from(entry.value);
+              sortedCourses.sort((a, b) {
+                final codeA = a['code'] ?? a.id;
+                final codeB = b['code'] ?? b.id;
+                return codeA.toString().compareTo(codeB.toString());
+              });
+
               return Container(
                 margin: const EdgeInsets.only(bottom: 16),
                 decoration: BoxDecoration(
@@ -68,17 +79,20 @@ class FacultyCoursesScreen extends StatelessWidget {
                       color: AppColors.primary,
                     ),
                   ),
-                  children: entry.value.map((courseDoc) {
+                  children: sortedCourses.map((courseDoc) {
+                    final courseCode = courseDoc['code'] ?? courseDoc.id;
+                    final courseName = courseDoc['name'] ?? '';
+
                     return ListTile(
-                      title: Text(courseDoc['courseId'].toUpperCase()),
-                      subtitle: Text(courseDoc['courseName']),
+                      title: Text(courseCode.toString().toUpperCase()),
+                      subtitle: courseName.isNotEmpty ? Text(courseName) : null,
                       trailing: const Icon(Icons.chevron_right),
                       onTap: () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (_) => CourseCommentsScreen(
-                              courseId: courseDoc['courseId'],
+                              courseId: courseCode.toString(),
                             ),
                           ),
                         );
