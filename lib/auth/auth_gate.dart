@@ -28,15 +28,15 @@ class AuthGate extends StatelessWidget {
           return const LoginScreen();
         }
 
-        // ✅ Login - Son seçilen tab'a göre yönlendir
+       
         return Consumer<BottomNavProvider>(
           builder: (context, bottomNav, _) {
-            // Provider henüz yüklenmediyse HomeScreen göster
+            
             if (bottomNav.isLoading) {
               return const HomeScreen();
             }
 
-            // Son seçilen tab'a göre ekran göster
+         
             switch (bottomNav.currentIndex) {
               case 0:
                 return const HomeScreen();
