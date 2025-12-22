@@ -17,3 +17,8 @@ The main purpose of the app is to create a platform where students can share and
 | Beril Nur Serbest|22630| Presentation & Communication Lead |
 
 
+##  Demo Video
+
+This demo video showcases the main features of **ConSUlt**
+
+[Watch the demo video](https://drive.google.com/file/d/1wx8iNaAHnmiva49eQ3tYJJGYSz-nN_ZH/view?usp=share_link)
