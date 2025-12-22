@@ -57,10 +57,10 @@ class _SplashScreenState extends State<SplashScreen>
       return;
     }
 
-    // Kullanıcı giriş yapmışsa, son seçilen tab'a göre yönlendir
+   
     final bottomNav = Provider.of<BottomNavProvider>(context, listen: false);
 
-    // Provider'ın yüklenmesini bekle (maksimum 1 saniye)
+ 
     int attempts = 0;
     while (bottomNav.isLoading && attempts < 10) {
       await Future.delayed(const Duration(milliseconds: 100));
@@ -122,3 +122,4 @@ class _SplashScreenState extends State<SplashScreen>
     );
   }
 }
+
