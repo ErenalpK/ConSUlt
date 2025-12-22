@@ -52,75 +52,75 @@ class _CourseCommentsScreenState extends State<CourseCommentsScreen> {
               Expanded(
                 child: reviews.isEmpty
                     ? const Center(
-                        child: Text('No comments yet.'),
-                      )
+                  child: Text('No comments yet.'),
+                )
                     : ListView.builder(
-                        padding: const EdgeInsets.only(bottom: 80),
-                        itemCount: reviews.length,
-                        itemBuilder: (context, index) {
-                          final review = reviews[index];
-                          final isOwner = review.createdBy == currentUser?.uid;
+                  padding: const EdgeInsets.only(bottom: 80),
+                  itemCount: reviews.length,
+                  itemBuilder: (context, index) {
+                    final review = reviews[index];
+                    final isOwner = review.createdBy == currentUser?.uid;
 
-                          return ListTile(
-                            title: Text(review.comment),
-                            subtitle: Text(review.createdByName),
-                            trailing: isOwner
-                                ? Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      IconButton(
-                                        icon: const Icon(Icons.edit),
-                                        onPressed: () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (_) => EditReviewScreen(
-                                                reviewId: review.id,
-                                                currentComment: review.comment,
-                                              ),
-                                            ),
-                                          );
-                                        },
+                    return ListTile(
+                      title: Text(review.comment),
+                      subtitle: Text(review.createdByName),
+                      trailing: isOwner
+                          ? Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IconButton(
+                            icon: const Icon(Icons.edit),
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => EditReviewScreen(
+                                    reviewId: review.id,
+                                    currentComment: review.comment,
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.delete),
+                            onPressed: () {
+                              showDialog(
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                  title: const Text('Delete Comment'),
+                                  content: const Text(
+                                      'Are you sure you want to delete this comment?'),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () =>
+                                          Navigator.pop(context),
+                                      child: const Text('Cancel'),
+                                    ),
+                                    TextButton(
+                                      onPressed: () {
+                                        context
+                                            .read<ReviewProvider>()
+                                            .deleteReview(review.id);
+                                        Navigator.pop(context);
+                                      },
+                                      child: const Text(
+                                        'Delete',
+                                        style:
+                                        TextStyle(color: Colors.red),
                                       ),
-                                      IconButton(
-                                        icon: const Icon(Icons.delete),
-                                        onPressed: () {
-                                          showDialog(
-                                            context: context,
-                                            builder: (context) => AlertDialog(
-                                              title: const Text('Delete Comment'),
-                                              content: const Text(
-                                                  'Are you sure you want to delete this comment?'),
-                                              actions: [
-                                                TextButton(
-                                                  onPressed: () =>
-                                                      Navigator.pop(context),
-                                                  child: const Text('Cancel'),
-                                                ),
-                                                TextButton(
-                                                  onPressed: () {
-                                                    context
-                                                        .read<ReviewProvider>()
-                                                        .deleteReview(review.id);
-                                                    Navigator.pop(context);
-                                                  },
-                                                  child: const Text(
-                                                    'Delete',
-                                                    style:
-                                                        TextStyle(color: Colors.red),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          );
-                                        },
-                                      ),
-                                    ],
-                                  )
-                                : null,
-                          );
-                        },
-                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                          ),
+                        ],
+                      )
+                          : null,
+                    );
+                  },
+                ),
               ),
               // Add Comment Button at the bottom
               Container(
