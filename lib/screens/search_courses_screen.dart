@@ -33,7 +33,7 @@ class _SearchCoursesScreenState extends State<SearchCoursesScreen> {
 
     try {
       final queryUpper = query.trim().toUpperCase();
-      
+
       // Get all courses and filter client-side (case-insensitive)
       final snapshot = await FirebaseFirestore.instance
           .collection('courses')
@@ -41,24 +41,27 @@ class _SearchCoursesScreenState extends State<SearchCoursesScreen> {
 
       final results = <Course>[];
       for (var doc in snapshot.docs) {
-        try {
-          final course = Course.fromFirestore(
-            doc.data() as Map<String, dynamic>,
-            doc.id,
-          );
-          
-          // Search in courseId and courseName (case-insensitive)
-          if (course.courseId.toUpperCase().contains(queryUpper) ||
-              course.courseName.toUpperCase().contains(queryUpper.toUpperCase())) {
-            results.add(course);
+        // Sadece büyük harfli document ID'lere sahip dersleri al
+        if (doc.id == doc.id.toUpperCase()) {
+          try {
+            final course = Course.fromFirestore(
+              doc.data() as Map<String, dynamic>,
+              doc.id,
+            );
+
+            // Search in code and name (case-insensitive)
+            if (course.code.toUpperCase().contains(queryUpper) ||
+                course.name.toUpperCase().contains(queryUpper.toUpperCase())) {
+              results.add(course);
+            }
+          } catch (e) {
+            print('Error parsing course: $e');
           }
-        } catch (e) {
-          print('Error parsing course: $e');
         }
       }
 
-      // Sort by courseId
-      results.sort((a, b) => a.courseId.compareTo(b.courseId));
+      // Sort by code
+      results.sort((a, b) => a.code.compareTo(b.code));
 
       setState(() {
         _searchResults = results;
@@ -106,15 +109,15 @@ class _SearchCoursesScreenState extends State<SearchCoursesScreen> {
                 prefixIcon: const Icon(Icons.search),
                 suffixIcon: _searchController.text.isNotEmpty
                     ? IconButton(
-                        icon: const Icon(Icons.clear),
-                        onPressed: () {
-                          _searchController.clear();
-                          setState(() {
-                            _searchResults = [];
-                            _hasSearched = false;
-                          });
-                        },
-                      )
+                  icon: const Icon(Icons.clear),
+                  onPressed: () {
+                    _searchController.clear();
+                    setState(() {
+                      _searchResults = [];
+                      _hasSearched = false;
+                    });
+                  },
+                )
                     : null,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
@@ -135,70 +138,69 @@ class _SearchCoursesScreenState extends State<SearchCoursesScreen> {
             child: _isSearching
                 ? const Center(child: CircularProgressIndicator())
                 : _hasSearched
-                    ? _searchResults.isEmpty
-                        ? const Center(
-                            child: Text('No courses found.'),
-                          )
-                        : ListView.builder(
-                            padding: const EdgeInsets.symmetric(horizontal: 16),
-                            itemCount: _searchResults.length,
-                            itemBuilder: (context, index) {
-                              final course = _searchResults[index];
-                              return Container(
-                                margin: const EdgeInsets.only(bottom: 12),
-                                child: Card(
-                                  color: AppColors.surface,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  child: ListTile(
-                                    title: Text(
-                                      course.courseId.toUpperCase(),
-                                      style: AppTextStyles.cardTitle,
-                                    ),
-                                    subtitle: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          course.courseName,
-                                          style: AppTextStyles.body,
-                                        ),
-                                        const SizedBox(height: 4),
-                                        Text(
-                                          '${course.faculty} - ${course.department}',
-                                          style: const TextStyle(
-                                            fontSize: 12,
-                                            color: Colors.grey,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    trailing: const Icon(Icons.chevron_right),
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (_) =>
-                                              CourseDetailScreen(course: course),
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                ),
-                              );
-                            },
-                          )
-                    : const Center(
-                        child: Text(
-                          'Enter a course code or name to search',
-                          style: TextStyle(color: Colors.grey),
-                        ),
+                ? _searchResults.isEmpty
+                ? const Center(
+              child: Text('No courses found.'),
+            )
+                : ListView.builder(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              itemCount: _searchResults.length,
+              itemBuilder: (context, index) {
+                final course = _searchResults[index];
+                return Container(
+                  margin: const EdgeInsets.only(bottom: 12),
+                  child: Card(
+                    color: AppColors.surface,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: ListTile(
+                      title: Text(
+                        course.code.toUpperCase(),
+                        style: AppTextStyles.cardTitle,
                       ),
+                      subtitle: Column(
+                        crossAxisAlignment:
+                        CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            course.name,
+                            style: AppTextStyles.body,
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            '${course.faculty} - ${course.department}',
+                            style: const TextStyle(
+                              fontSize: 12,
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ],
+                      ),
+                      trailing: const Icon(Icons.chevron_right),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) =>
+                                CourseDetailScreen(course: course),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                );
+              },
+            )
+                : const Center(
+              child: Text(
+                'Enter a course code or name to search',
+                style: TextStyle(color: Colors.grey),
+              ),
+            ),
           ),
         ],
       ),
     );
   }
 }
-
