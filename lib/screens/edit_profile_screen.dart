@@ -65,7 +65,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           _email.text = (data['userEmail'] ?? user.email ?? '').toString();
         });
       } else {
-        // Eğer doküman yoksa, auth'tan al
+  
         setState(() {
           _oldUsername = '';
           _username.text = '';
@@ -74,7 +74,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         });
       }
     } catch (e) {
-      // Hata durumunda auth'tan al
+      
       final user = FirebaseAuth.instance.currentUser;
       setState(() {
         _oldUsername = '';
@@ -104,17 +104,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       final newUsername = _username.text.trim();
       final usernameChanged = newUsername != _oldUsername;
 
-      // Firestore'a kaydet
+   
       await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
         'fullName': _fullname.text.trim(),
         'userName': newUsername,
         'userEmail': _email.text.trim(),
       }, SetOptions(merge: true));
 
-      // Auth displayName'i de güncelle
+     
       await user.updateDisplayName(_fullname.text.trim());
 
-      // Eğer username değiştiyse, tüm yorumlardaki username'i güncelle
+     
       if (usernameChanged) {
         await _reviewService.updateUsernameInAllReviews(user.uid, newUsername);
       }
@@ -129,8 +129,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.pop(context); // Dialog'u kapat
-                Navigator.pop(context); // Edit profile ekranından çık
+                Navigator.pop(context); 
+                Navigator.pop(context); 
               },
               child: const Text("OK"),
             ),
