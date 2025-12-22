@@ -27,10 +27,10 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
 
   Future<void> _checkFavoriteStatus() async {
     if (FirebaseAuth.instance.currentUser == null) return;
-    
+
     try {
       final doc = await _favoriteService.favoriteRef
-          .doc(widget.course.courseId)
+          .doc(widget.course.code)
           .get();
       if (mounted) {
         setState(() {
@@ -56,14 +56,14 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
 
     try {
       if (_isFavorite) {
-        await _favoriteService.removeFromFavorites(widget.course.courseId);
+        await _favoriteService.removeFromFavorites(widget.course.code);
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Removed from favorites')),
           );
         }
       } else {
-        await _favoriteService.addToFavorites(widget.course.courseId);
+        await _favoriteService.addToFavorites(widget.course.code);
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Added to favorites')),
@@ -93,7 +93,7 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: Text(widget.course.courseId, style: AppTextStyles.appBarTitle),
+        title: Text(widget.course.code, style: AppTextStyles.appBarTitle),
         backgroundColor: AppColors.surface,
       ),
       body: Padding(
@@ -101,7 +101,7 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(widget.course.courseName, style: AppTextStyles.title),
+            Text(widget.course.name, style: AppTextStyles.title),
             const SizedBox(height: 10),
             Text("Instructor: ${widget.course.instructor}",
                 style: AppTextStyles.body),
@@ -119,7 +119,7 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
                         context,
                         MaterialPageRoute(
                           builder: (_) => CourseCommentsScreen(
-                            courseId: widget.course.courseId,
+                            courseId: widget.course.code,
                           ),
                         ),
                       );
