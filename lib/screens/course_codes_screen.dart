@@ -55,8 +55,8 @@ class CourseCodesScreen extends StatelessWidget {
                     const SizedBox(height: 8),
                     Text(
                       error.contains('permission-denied')
-                        ? 'Please check Firestore security rules.\nThe courses collection may need read permissions.'
-                        : 'Error: $error',
+                          ? 'Please check Firestore security rules.\nThe courses collection may need read permissions.'
+                          : 'Error: $error',
                       textAlign: TextAlign.center,
                       style: const TextStyle(fontSize: 14, color: Colors.red),
                     ),
@@ -88,13 +88,16 @@ class CourseCodesScreen extends StatelessWidget {
             );
           }
 
-          // Parse courses
+          // Parse courses - sadece büyük harfli document ID'lere sahip dersleri al
           final courses = <Course>[];
           for (var doc in snapshot.data!.docs) {
-            try {
-              courses.add(Course.fromFirestore(doc.data() as Map<String, dynamic>, doc.id));
-            } catch (e) {
-              print('Error parsing course: $e');
+            // Sadece büyük harfli document ID'lere sahip dersleri al
+            if (doc.id == doc.id.toUpperCase()) {
+              try {
+                courses.add(Course.fromFirestore(doc.data() as Map<String, dynamic>, doc.id));
+              } catch (e) {
+                print('Error parsing course: $e');
+              }
             }
           }
 
@@ -104,8 +107,8 @@ class CourseCodesScreen extends StatelessWidget {
             );
           }
 
-          // Sort by courseId
-          courses.sort((a, b) => a.courseId.compareTo(b.courseId));
+          // Sort by code
+          courses.sort((a, b) => a.code.compareTo(b.code));
 
           return ListView(
             padding: const EdgeInsets.all(16),
@@ -119,11 +122,11 @@ class CourseCodesScreen extends StatelessWidget {
                   ),
                   child: ListTile(
                     title: Text(
-                      course.courseId.toUpperCase(),
+                      course.code.toUpperCase(),
                       style: AppTextStyles.cardTitle,
                     ),
                     subtitle: Text(
-                      course.courseName,
+                      course.name,
                       style: AppTextStyles.body,
                     ),
                     trailing: const Icon(Icons.chevron_right),
@@ -145,4 +148,3 @@ class CourseCodesScreen extends StatelessWidget {
     );
   }
 }
-
