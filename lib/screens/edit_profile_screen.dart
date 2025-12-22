@@ -155,7 +155,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       backgroundColor: AppColors.background,
 
 
-      bottomNavigationBar: const CustomBottomNavBar(currentIndex: 3),
+      bottomNavigationBar: const CustomBottomNavBar(),
 
       appBar: AppBar(
         backgroundColor: AppColors.background,
@@ -173,64 +173,64 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         child: _isLoading
             ? const Center(child: CircularProgressIndicator())
             : SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                  child: Form(
-                    key: _formKey,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const SizedBox(height: 10),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 10),
 
-                        /// -------- Username --------
-                        _buildLabel("Username"),
-                        _buildTextField(
-                          controller: _username,
-                          hint: "Enter your username",
-                          validator: (v) => v == null || v.isEmpty ? "Username required" : null,
+                  /// -------- Username --------
+                  _buildLabel("Username"),
+                  _buildTextField(
+                    controller: _username,
+                    hint: "Enter your username",
+                    validator: (v) => v == null || v.isEmpty ? "Username required" : null,
+                  ),
+
+                  const SizedBox(height: 20),
+
+                  /// -------- Full Name --------
+                  _buildLabel("Full Name"),
+                  _buildTextField(
+                    controller: _fullname,
+                    hint: "Enter your full name",
+                    validator: (v) => v == null || v.isEmpty ? "Full name required" : null,
+                  ),
+
+                  const SizedBox(height: 20),
+
+                  /// -------- SAVE BUTTON --------
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () async {
+                        if (_formKey.currentState!.validate()) {
+                          await _saveProfile();
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.deepPurple,
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
                         ),
-
-                        const SizedBox(height: 20),
-
-                        /// -------- Full Name --------
-                        _buildLabel("Full Name"),
-                        _buildTextField(
-                          controller: _fullname,
-                          hint: "Enter your full name",
-                          validator: (v) => v == null || v.isEmpty ? "Full name required" : null,
-                        ),
-
-                        const SizedBox(height: 20),
-
-                        /// -------- SAVE BUTTON --------
-                        SizedBox(
-                          width: double.infinity,
-                          child: ElevatedButton(
-                            onPressed: () async {
-                              if (_formKey.currentState!.validate()) {
-                                await _saveProfile();
-                              }
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.deepPurple,
-                              padding: const EdgeInsets.symmetric(vertical: 14),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                            ),
-                            child: Text(
-                              "Save Changes",
-                              style: AppTextStyles.buttonText,
-                            ),
-                          ),
-                        ),
-
-                        const SizedBox(height: 20),
-                      ],
+                      ),
+                      child: Text(
+                        "Save Changes",
+                        style: AppTextStyles.buttonText,
+                      ),
                     ),
                   ),
-                ),
+
+                  const SizedBox(height: 20),
+                ],
               ),
+            ),
+          ),
+        ),
       ),
     );
   }
