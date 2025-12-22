@@ -32,7 +32,7 @@ class FacultyCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Fakülte Adı
+            
             Padding(
               padding: const EdgeInsets.only(bottom: 8.0, top: 4.0, left: 4.0),
               child: Text(
@@ -41,7 +41,7 @@ class FacultyCard extends StatelessWidget {
               ),
             ),
 
-            // Resim Kutusu
+            
             Container(
               height: 180,
               width: double.infinity,
@@ -58,7 +58,7 @@ class FacultyCard extends StatelessWidget {
                   errorBuilder: (ctx, err, stack) => Container(color: Colors.grey),
                 )
                     : Image.asset(
-                  // DİKKAT: Bu isimde resimlerin assets/images/ klasöründe olması lazım!
+                  
                   'assets/images/${facultyName.toLowerCase()}.jpeg',
                   fit: BoxFit.cover,
                   errorBuilder: (ctx, err, stack) => Container(color: Colors.grey.shade300, child: const Icon(Icons.image_not_supported)),
