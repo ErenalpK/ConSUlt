@@ -13,7 +13,7 @@ class FavoriteCourseService {
           .collection('users')
           .doc(uid)
           .collection('favoriteCourses');
-  
+
   // Public getter for checking favorite status
   CollectionReference get favoriteRef => _favoriteRef;
 
@@ -45,6 +45,5 @@ class FavoriteCourseService {
   }
 
 
-  
-}
 
+}
