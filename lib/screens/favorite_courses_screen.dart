@@ -20,7 +20,7 @@ class _FavoriteCoursesScreenState extends State<FavoriteCoursesScreen> {
   @override
   void initState() {
     super.initState();
-    // Ekran açıldığında index'i ayarla
+ 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final bottomNav = Provider.of<BottomNavProvider>(context, listen: false);
       bottomNav.changeIndex(1);
@@ -113,7 +113,7 @@ class _FavoriteCoursesScreenState extends State<FavoriteCoursesScreen> {
                 );
               }
 
-              // Sadece büyük harfli document ID'lere sahip dersleri al
+             
               final courses = coursesSnapshot.data!.docs
                   .where((doc) => doc.id == doc.id.toUpperCase())
                   .map((doc) => Course.fromFirestore(doc.data() as Map<String, dynamic>, doc.id))
