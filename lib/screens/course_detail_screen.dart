@@ -108,6 +108,38 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
             const SizedBox(height: 10),
             Text("ECTS: ${widget.course.ects}", style: AppTextStyles.body),
             const SizedBox(height: 16),
+            // Prerequisites
+            if (widget.course.prerequisites.isNotEmpty) ...[
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("Prerequisites: ", style: AppTextStyles.body.copyWith(fontWeight: FontWeight.bold)),
+                  Expanded(
+                    child: Text(
+                      widget.course.prerequisites.map((e) => e.toString()).join(", "),
+                      style: AppTextStyles.body,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+            ],
+            // Corequisites
+            if (widget.course.corequisites.isNotEmpty) ...[
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("Corequisites: ", style: AppTextStyles.body.copyWith(fontWeight: FontWeight.bold)),
+                  Expanded(
+                    child: Text(
+                      widget.course.corequisites.map((e) => e.toString()).join(", "),
+                      style: AppTextStyles.body,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+            ],
             Text(widget.course.description, style: AppTextStyles.body),
             const Spacer(),
             Row(
