@@ -43,11 +43,11 @@ class FacultyCoursesScreen extends StatelessWidget {
             );
           }
 
-          /// 🔹 Department → Courses Map
+         
           final Map<String, List<QueryDocumentSnapshot>> grouped = {};
 
           for (var doc in snapshot.data!.docs) {
-            // Sadece büyük harfli document ID'lere sahip dersleri al
+           
             if (doc.id == doc.id.toUpperCase()) {
               final dept = doc['department'];
               grouped.putIfAbsent(dept, () => []).add(doc);
@@ -57,7 +57,7 @@ class FacultyCoursesScreen extends StatelessWidget {
           return ListView(
             padding: const EdgeInsets.all(16),
             children: grouped.entries.map((entry) {
-              // Her departman için dersleri code field'ına göre sırala
+             
               final sortedCourses = List<QueryDocumentSnapshot>.from(entry.value);
               sortedCourses.sort((a, b) {
                 final codeA = a['code'] ?? a.id;
