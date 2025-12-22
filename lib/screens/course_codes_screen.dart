@@ -88,10 +88,10 @@ class CourseCodesScreen extends StatelessWidget {
             );
           }
 
-          // Parse courses - sadece büyük harfli document ID'lere sahip dersleri al
+          
           final courses = <Course>[];
           for (var doc in snapshot.data!.docs) {
-            // Sadece büyük harfli document ID'lere sahip dersleri al
+ 
             if (doc.id == doc.id.toUpperCase()) {
               try {
                 courses.add(Course.fromFirestore(doc.data() as Map<String, dynamic>, doc.id));
