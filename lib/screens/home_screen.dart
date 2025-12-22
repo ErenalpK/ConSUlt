@@ -20,7 +20,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    // Ekran açıldığında index'i ayarla
+    
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final bottomNav = Provider.of<BottomNavProvider>(context, listen: false);
       bottomNav.changeIndex(0);
