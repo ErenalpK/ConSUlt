@@ -12,7 +12,7 @@ class CourseService {
         .snapshots()
         .map((snapshot) {
       return snapshot.docs
-          .where((doc) => doc.id == doc.id.toUpperCase()) // Sadece büyük harfli document ID'lere sahip dersleri al
+          .where((doc) => doc.id == doc.id.toUpperCase()) 
           .map((doc) => Course.fromFirestore(doc.data(), doc.id))
           .toList();
     });
