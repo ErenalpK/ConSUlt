@@ -8,10 +8,11 @@ class CourseService {
     return _db
         .collection('courses')
         .where('faculty', isEqualTo: faculty)
-        .orderBy('courseId')
+        .orderBy('code')
         .snapshots()
         .map((snapshot) {
       return snapshot.docs
+          .where((doc) => doc.id == doc.id.toUpperCase()) // Sadece büyük harfli document ID'lere sahip dersleri al
           .map((doc) => Course.fromFirestore(doc.data(), doc.id))
           .toList();
     });
