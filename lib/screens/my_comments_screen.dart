@@ -3,11 +3,28 @@ import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import '../providers/review_provider.dart';
+import '../providers/bottom_nav_provider.dart';
 import '../models/review.dart';
 import '../utils/styles.dart';
+import '../widgets/bottom_nav_bar.dart';
 
-class MyCommentsScreen extends StatelessWidget {
+class MyCommentsScreen extends StatefulWidget {
   const MyCommentsScreen({super.key});
+
+  @override
+  State<MyCommentsScreen> createState() => _MyCommentsScreenState();
+}
+
+class _MyCommentsScreenState extends State<MyCommentsScreen> {
+  @override
+  void initState() {
+    super.initState();
+    // Ekran açıldığında index'i ayarla
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final bottomNav = Provider.of<BottomNavProvider>(context, listen: false);
+      bottomNav.changeIndex(2);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -144,26 +161,7 @@ class MyCommentsScreen extends StatelessWidget {
         ),
       ),
 
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: 2,
-        selectedItemColor: AppColors.primary,
-        unselectedItemColor: Colors.grey,
-        type: BottomNavigationBarType.fixed,
-        onTap: (index) {
-          if (index == 0) Navigator.pushReplacementNamed(context, '/home');
-          if (index == 1) Navigator.pushReplacementNamed(context, '/favorites');
-          if (index == 2) {}
-          if (index == 3) Navigator.pushReplacementNamed(context, '/profile');
-        },
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.favorite_border), label: 'Favorites'),
-          BottomNavigationBarItem(icon: Icon(Icons.comment), label: 'Comment'),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.person_outline), label: 'Profile'),
-        ],
-      ),
+      bottomNavigationBar: const CustomBottomNavBar(),
     );
   }
 
