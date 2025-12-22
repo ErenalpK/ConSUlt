@@ -1,14 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:provider/provider.dart';
 import '../utils/styles.dart';
 import '../widgets/bottom_nav_bar.dart';
+import '../providers/bottom_nav_provider.dart';
 import '../services/favorite_course_service.dart';
 import '../models/course.dart';
 import 'course_detail_screen.dart';
 
-class FavoriteCoursesScreen extends StatelessWidget {
-  FavoriteCoursesScreen({super.key});
+class FavoriteCoursesScreen extends StatefulWidget {
+  const FavoriteCoursesScreen({super.key});
+
+  @override
+  State<FavoriteCoursesScreen> createState() => _FavoriteCoursesScreenState();
+}
+
+class _FavoriteCoursesScreenState extends State<FavoriteCoursesScreen> {
+  @override
+  void initState() {
+    super.initState();
+    // Ekran açıldığında index'i ayarla
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final bottomNav = Provider.of<BottomNavProvider>(context, listen: false);
+      bottomNav.changeIndex(1);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +46,7 @@ class FavoriteCoursesScreen extends StatelessWidget {
         body: const Center(
           child: Text("Please login to see your favorite courses"),
         ),
-        bottomNavigationBar: const CustomBottomNavBar(currentIndex: 1),
+        bottomNavigationBar: const CustomBottomNavBar(),
       );
     }
 
@@ -96,12 +113,14 @@ class FavoriteCoursesScreen extends StatelessWidget {
                 );
               }
 
+              // Sadece büyük harfli document ID'lere sahip dersleri al
               final courses = coursesSnapshot.data!.docs
+                  .where((doc) => doc.id == doc.id.toUpperCase())
                   .map((doc) => Course.fromFirestore(doc.data() as Map<String, dynamic>, doc.id))
                   .toList();
 
-              // Sort by courseId
-              courses.sort((a, b) => a.courseId.compareTo(b.courseId));
+              // Sort by code
+              courses.sort((a, b) => a.code.compareTo(b.code));
 
               return ListView.builder(
                 padding: const EdgeInsets.all(16),
@@ -117,11 +136,11 @@ class FavoriteCoursesScreen extends StatelessWidget {
                       ),
                       child: ListTile(
                         title: Text(
-                          course.courseId.toUpperCase(),
+                          course.code.toUpperCase(),
                           style: AppTextStyles.cardTitle,
                         ),
                         subtitle: Text(
-                          course.courseName,
+                          course.name,
                           style: AppTextStyles.body,
                         ),
                         trailing: const Icon(Icons.chevron_right),
@@ -142,7 +161,7 @@ class FavoriteCoursesScreen extends StatelessWidget {
           );
         },
       ),
-      bottomNavigationBar: const CustomBottomNavBar(currentIndex: 1),
+      bottomNavigationBar: const CustomBottomNavBar(),
     );
   }
 }
