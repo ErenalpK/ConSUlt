@@ -50,9 +50,9 @@ class ProgramCodesScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      error.contains('permission-denied') 
-                        ? 'Please check Firestore security rules.\nThe courses collection may need read permissions.'
-                        : 'Error: $error',
+                      error.contains('permission-denied')
+                          ? 'Please check Firestore security rules.\nThe courses collection may need read permissions.'
+                          : 'Error: $error',
                       textAlign: TextAlign.center,
                       style: const TextStyle(fontSize: 14, color: Colors.red),
                     ),
@@ -91,12 +91,15 @@ class ProgramCodesScreen extends StatelessWidget {
             );
           }
 
-          // Get unique departments (program codes)
+          // Get unique departments (program codes) - sadece büyük harfli document ID'lere sahip dersleri al
           final Set<String> programCodes = {};
           for (var doc in snapshot.data!.docs) {
-            final dept = doc['department'] as String?;
-            if (dept != null && dept.isNotEmpty) {
-              programCodes.add(dept);
+            // Sadece büyük harfli document ID'lere sahip dersleri al
+            if (doc.id == doc.id.toUpperCase()) {
+              final dept = doc['department'] as String?;
+              if (dept != null && dept.isNotEmpty) {
+                programCodes.add(dept);
+              }
             }
           }
 
