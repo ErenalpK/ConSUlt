@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:provider/provider.dart';
 
 import 'login_screen.dart';
 import 'home_screen.dart';
+import 'favorite_courses_screen.dart';
+import 'my_comments_screen.dart';
+import 'profile_screen.dart';
+import '../providers/bottom_nav_provider.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -43,11 +48,48 @@ class _SplashScreenState extends State<SplashScreen>
 
     final user = FirebaseAuth.instance.currentUser;
 
+    if (user == null) {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (_) => const LoginScreen(),
+        ),
+      );
+      return;
+    }
+
+    // Kullanıcı giriş yapmışsa, son seçilen tab'a göre yönlendir
+    final bottomNav = Provider.of<BottomNavProvider>(context, listen: false);
+
+    // Provider'ın yüklenmesini bekle (maksimum 1 saniye)
+    int attempts = 0;
+    while (bottomNav.isLoading && attempts < 10) {
+      await Future.delayed(const Duration(milliseconds: 100));
+      attempts++;
+      if (!mounted) return;
+    }
+
+    if (!mounted) return;
+
+    Widget targetScreen;
+    switch (bottomNav.currentIndex) {
+      case 0:
+        targetScreen = const HomeScreen();
+        break;
+      case 1:
+        targetScreen = const FavoriteCoursesScreen();
+        break;
+      case 2:
+        targetScreen = const MyCommentsScreen();
+        break;
+      case 3:
+        targetScreen = const ProfileScreen();
+        break;
+      default:
+        targetScreen = const HomeScreen();
+    }
+
     Navigator.of(context).pushReplacement(
-      MaterialPageRoute(
-        builder: (_) =>
-            user == null ? const LoginScreen() : const HomeScreen(),
-      ),
+      MaterialPageRoute(builder: (_) => targetScreen),
     );
   }
 
