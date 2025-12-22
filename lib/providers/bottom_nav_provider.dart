@@ -35,7 +35,8 @@ class BottomNavProvider extends ChangeNotifier {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setInt('last_tab', index);
     } catch (e) {
-      // Hata durumunda sessizce devam et
+     
     }
   }
 }
+
