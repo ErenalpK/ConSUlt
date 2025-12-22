@@ -9,13 +9,13 @@ class CustomBottomNavBar extends StatelessWidget {
   void _onTap(BuildContext context, int index) {
     final bottomNav = Provider.of<BottomNavProvider>(context, listen: false);
 
-    // Aynı tab'a tıklanırsa hiçbir şey yapma
+
     if (index == bottomNav.currentIndex) return;
 
-    // Tab'ı değiştir ve SharedPreferences'a kaydet
+
     bottomNav.changeIndex(index);
 
-    // İlgili ekrana yönlendir
+    
     switch (index) {
       case 0:
         Navigator.pushReplacementNamed(context, '/home');
