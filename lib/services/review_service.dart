@@ -50,4 +50,21 @@ class ReviewService {
   Future<void> deleteReview(String reviewId) async {
     await _db.collection('comments').doc(reviewId).delete();
   }
+
+  /// Updates the username in all reviews created by a specific user
+  Future<void> updateUsernameInAllReviews(String userId, String newUsername) async {
+    final reviewsQuery = await _db
+        .collection('comments')
+        .where('createdBy', isEqualTo: userId)
+        .get();
+
+    final batch = _db.batch();
+    for (var doc in reviewsQuery.docs) {
+      batch.update(doc.reference, {'createdByName': newUsername});
+    }
+
+    if (reviewsQuery.docs.isNotEmpty) {
+      await batch.commit();
+    }
+  }
 }
