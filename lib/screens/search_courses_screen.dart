@@ -41,7 +41,7 @@ class _SearchCoursesScreenState extends State<SearchCoursesScreen> {
 
       final results = <Course>[];
       for (var doc in snapshot.docs) {
-        // Sadece büyük harfli document ID'lere sahip dersleri al
+        
         if (doc.id == doc.id.toUpperCase()) {
           try {
             final course = Course.fromFirestore(
@@ -49,7 +49,7 @@ class _SearchCoursesScreenState extends State<SearchCoursesScreen> {
               doc.id,
             );
 
-            // Search in code and name (case-insensitive)
+            // Search in code and name 
             if (course.code.toUpperCase().contains(queryUpper) ||
                 course.name.toUpperCase().contains(queryUpper.toUpperCase())) {
               results.add(course);
