@@ -6,6 +6,7 @@ import 'firebase_options.dart';
 
 // Providers
 import 'providers/review_provider.dart';
+import 'providers/bottom_nav_provider.dart';
 
 // Screens
 import 'screens/splash_screen.dart';
@@ -30,7 +31,7 @@ void main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => ReviewProvider()),
-
+        ChangeNotifierProvider(create: (_) => BottomNavProvider()),
       ],
       child: const ConsultApp(),
     ),
@@ -61,4 +62,3 @@ class ConsultApp extends StatelessWidget {
     );
   }
 }
-
