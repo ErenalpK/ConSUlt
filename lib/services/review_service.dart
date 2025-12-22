@@ -8,13 +8,14 @@ class ReviewService {
     return _db
         .collection('comments')
         .where('courseId', isEqualTo: courseId)
-        .where('createdAt', isNotEqualTo: null)
-        .orderBy('createdAt', descending: true)
         .snapshots()
         .map((snapshot) {
-      return snapshot.docs
+      final reviews = snapshot.docs
           .map((doc) => Review.fromFirestore(doc))
           .toList();
+      // Sort by createdAt descending
+      reviews.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+      return reviews;
     });
   }
 
@@ -22,12 +23,14 @@ class ReviewService {
     return _db
         .collection('comments')
         .where('createdBy', isEqualTo: userId)
-        .orderBy('createdAt', descending: true)
         .snapshots()
         .map((snapshot) {
-      return snapshot.docs
+      final reviews = snapshot.docs
           .map((doc) => Review.fromFirestore(doc))
           .toList();
+      // Sort by createdAt descending
+      reviews.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+      return reviews;
     });
   }
 
@@ -35,7 +38,7 @@ class ReviewService {
     await _db.collection('comments').add(review.toMap());
   }
 
- 
+
   Future<void> updateReview(String reviewId, String newComment) async {
     await _db.collection('comments').doc(reviewId).update({
       'comment': newComment,

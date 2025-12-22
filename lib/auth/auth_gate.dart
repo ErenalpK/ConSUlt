@@ -19,12 +19,12 @@ class AuthGate extends StatelessWidget {
           );
         }
 
-        // ❌ Login değil
+
         if (!snapshot.hasData) {
           return const LoginScreen();
         }
 
-        // ✅ Login
+   
         return const HomeScreen();
       },
     );

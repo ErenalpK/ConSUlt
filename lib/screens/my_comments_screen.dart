@@ -103,7 +103,7 @@ class MyCommentsScreen extends StatelessWidget {
                                     ),
                                     Row(
                                       children: [
-                                        /// ✏️ EDIT
+
                                         IconButton(
                                           icon: const Icon(Icons.edit_outlined),
                                           onPressed: () {
@@ -114,7 +114,7 @@ class MyCommentsScreen extends StatelessWidget {
                                           },
                                         ),
 
-                                        /// 🗑 DELETE (sonra iyileştireceğiz)
+
                                         IconButton(
                                           icon: const Icon(
                                             Icons.delete_outline,
@@ -167,7 +167,7 @@ class MyCommentsScreen extends StatelessWidget {
     );
   }
 
-  /// ✏️ EDIT DIALOG
+
   void _showEditDialog(BuildContext context, Review review) {
     final controller = TextEditingController(text: review.comment);
 

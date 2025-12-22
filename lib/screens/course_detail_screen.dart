@@ -1,193 +1,150 @@
 import 'package:flutter/material.dart';
-import '../models/course_data.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import '../models/course.dart';
 import '../utils/styles.dart';
+import '../services/favorite_course_service.dart';
+import 'course_comments_screen.dart';
 
-class CourseDetailScreen extends StatelessWidget {
-  const CourseDetailScreen({super.key});
+class CourseDetailScreen extends StatefulWidget {
+  final Course course;
 
-  static final CourseDetail courseData = CourseDetail(
-    faculty: "FENS",
-    code: "CS310",
-    name: "Mobile Application Development",
-    commentCount: 18,
-    description:
-    "Mobile Application Development explores the essentials of this course in to mobile world. Students will learn to build mobile applications from scratch using modern frameworks and development tools, focusing on both Android and iOS platforms.",
-    instructor: "Not assigned",
-    ects: 5.0,
-    prerequisites: "CS201",
-    corequisites: "CS301-6",
-    comments: [],
-  );
+  const CourseDetailScreen({super.key, required this.course});
+
+  @override
+  State<CourseDetailScreen> createState() => _CourseDetailScreenState();
+}
+
+class _CourseDetailScreenState extends State<CourseDetailScreen> {
+  final FavoriteCourseService _favoriteService = FavoriteCourseService();
+  bool _isFavorite = false;
+  bool _isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkFavoriteStatus();
+  }
+
+  Future<void> _checkFavoriteStatus() async {
+    if (FirebaseAuth.instance.currentUser == null) return;
+    
+    try {
+      final doc = await _favoriteService.favoriteRef
+          .doc(widget.course.courseId)
+          .get();
+      if (mounted) {
+        setState(() {
+          _isFavorite = doc.exists;
+        });
+      }
+    } catch (e) {
+      print('Error checking favorite status: $e');
+    }
+  }
+
+  Future<void> _toggleFavorite() async {
+    if (FirebaseAuth.instance.currentUser == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please login to add favorites')),
+      );
+      return;
+    }
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      if (_isFavorite) {
+        await _favoriteService.removeFromFavorites(widget.course.courseId);
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Removed from favorites')),
+          );
+        }
+      } else {
+        await _favoriteService.addToFavorites(widget.course.courseId);
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Added to favorites')),
+          );
+        }
+      }
+      if (mounted) {
+        setState(() {
+          _isFavorite = !_isFavorite;
+          _isLoading = false;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error: $e')),
+        );
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: const Text("ConSUlt", style: AppTextStyles.appBarTitle),
-        centerTitle: true,
+        title: Text(widget.course.courseId, style: AppTextStyles.appBarTitle),
         backgroundColor: AppColors.surface,
-        elevation: 0,
-        iconTheme: const IconThemeData(color: AppColors.primary),
       ),
-
-      /// 🚫 — BOTTOM NAVIGATION BAR TAMAMEN KALDIRILDI —
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            _buildInfoCard(context, courseData),
-            const SizedBox(height: 16),
-            _buildDescriptionCard(courseData),
-            const SizedBox(height: 16),
-            _buildDetailsCard(courseData),
-            const SizedBox(height: 24),
-
-            SizedBox(
-              width: double.infinity,
-              child: OutlinedButton.icon(
-                icon: const Icon(Icons.comment, color: AppColors.primary),
-                label: const Text(
-                  "View All Student Comments",
-                  style: TextStyle(
-                    color: AppColors.primary,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                style: OutlinedButton.styleFrom(
-                  side: const BorderSide(color: AppColors.primary),
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                ),
-                onPressed: () {
-                  Navigator.pushNamed(context, '/course_comments');
-                },
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildInfoCard(BuildContext context, CourseDetail data) {
-    return Card(
-      elevation: 0,
-      color: AppColors.surface,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-        side: BorderSide(color: AppColors.border),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
+      body: Padding(
+        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(data.faculty, style: AppTextStyles.caption),
-            const SizedBox(height: 4),
-            Text(data.code, style: AppTextStyles.cardTitle),
-            const SizedBox(height: 4),
-            Text(
-              data.name,
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
-                fontFamily: AppTextStyles.fontFamily,
-              ),
-            ),
-            const SizedBox(height: 12),
-
-            InkWell(
-              onTap: () => Navigator.pushNamed(context, '/course_comments'),
-              child: Row(
-                children: [
-                  const Icon(Icons.chat_bubble_outline, size: 18, color: Colors.grey),
-                  const SizedBox(width: 6),
-                  Text(
-                    "${data.commentCount} comments",
-                    style: const TextStyle(
-                      color: Colors.grey,
-                      decoration: TextDecoration.underline,
-                      fontFamily: AppTextStyles.fontFamily,
-                    ),
+            Text(widget.course.courseName, style: AppTextStyles.title),
+            const SizedBox(height: 10),
+            Text("Instructor: ${widget.course.instructor}",
+                style: AppTextStyles.body),
+            const SizedBox(height: 10),
+            Text("ECTS: ${widget.course.ects}", style: AppTextStyles.body),
+            const SizedBox(height: 16),
+            Text(widget.course.description, style: AppTextStyles.body),
+            const Spacer(),
+            Row(
+              children: [
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => CourseCommentsScreen(
+                            courseId: widget.course.courseId,
+                          ),
+                        ),
+                      );
+                    },
+                    child: const Text("See Comments"),
                   ),
-                ],
-              ),
+                ),
+                const SizedBox(width: 12),
+                IconButton(
+                  onPressed: _isLoading ? null : _toggleFavorite,
+                  icon: Icon(
+                    _isFavorite ? Icons.favorite : Icons.favorite_border,
+                    color: _isFavorite ? Colors.red : AppColors.primary,
+                    size: 28,
+                  ),
+                  style: IconButton.styleFrom(
+                    backgroundColor: AppColors.surface,
+                    padding: const EdgeInsets.all(16),
+                  ),
+                ),
+              ],
             ),
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildDescriptionCard(CourseDetail data) {
-    return Card(
-      elevation: 0,
-      color: AppColors.surface,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-        side: BorderSide(color: AppColors.border),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              "Course Description",
-              style: TextStyle(
-                color: AppColors.primary,
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
-                fontFamily: AppTextStyles.fontFamily,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(data.description, style: AppTextStyles.body),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildDetailsCard(CourseDetail data) {
-    return Card(
-      elevation: 0,
-      color: AppColors.surface,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-        side: BorderSide(color: AppColors.border),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            _detailItem("Instructor", data.instructor),
-            _detailItem("ECTS", "${data.ects}"),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _detailItem(String label, String value) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(label, style: AppTextStyles.caption),
-        const SizedBox(height: 4),
-        Text(
-          value,
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 14,
-            fontFamily: AppTextStyles.fontFamily,
-          ),
-        ),
-      ],
     );
   }
 }

@@ -13,7 +13,8 @@ class SignUpScreen extends StatefulWidget {
 class _SignUpScreenState extends State<SignUpScreen> {
   final _formKey = GlobalKey<FormState>();
 
-  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _fullNameController = TextEditingController();
+  final TextEditingController _usernameController = TextEditingController(); // PRIVATE
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmController = TextEditingController();
@@ -25,24 +26,29 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   @override
   void dispose() {
-    _nameController.dispose();
+    _fullNameController.dispose();
+    _usernameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
     _confirmController.dispose();
     super.dispose();
   }
 
-  String? _validateName(String? value) {
-    if (value == null || value.trim().isEmpty) {
-      return "User name cannot be empty";
-    }
+  String? _validateFullName(String? value) {
+    if (value == null || value.trim().isEmpty) return "Full name cannot be empty";
+    if (value.trim().length < 3) return "Full name is too short";
+    return null;
+  }
+
+  String? _validateUsername(String? value) {
+    if (value == null || value.trim().isEmpty) return "Username cannot be empty";
+    if (value.contains(' ')) return "Username cannot contain spaces";
+    if (value.trim().length < 3) return "Username is too short";
     return null;
   }
 
   String? _validateEmail(String? value) {
-    if (value == null || value.trim().isEmpty) {
-      return "Email cannot be empty";
-    }
+    if (value == null || value.trim().isEmpty) return "Email cannot be empty";
     if (!value.endsWith("@sabanciuniv.edu")) {
       return "Only Sabancı University emails are allowed";
     }
@@ -50,36 +56,27 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   String? _validatePassword(String? value) {
-    if (value == null || value.isEmpty) {
-      return "Password cannot be empty";
-    }
-    if (value.length < 8) {
-      return "Password must be at least 8 characters";
-    }
+    if (value == null || value.isEmpty) return "Password cannot be empty";
+    if (value.length < 8) return "Password must be at least 8 characters";
     return null;
   }
 
   String? _validateConfirmPassword(String? value) {
-    if (value == null || value.isEmpty) {
-      return "Please confirm your password";
-    }
-    if (value != _passwordController.text) {
-      return "Passwords do not match";
-    }
+    if (value == null || value.isEmpty) return "Please confirm your password";
+    if (value != _passwordController.text) return "Passwords do not match";
     return null;
   }
 
   Future<void> _handleSubmit() async {
     setState(() => _submitted = true);
-
     if (!_formKey.currentState!.validate()) return;
 
     setState(() => _isLoading = true);
 
     try {
-      // 1️⃣ AUTH
-      UserCredential userCredential =
-          await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      // 1) AUTH
+      final userCredential =
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: _emailController.text.trim(),
         password: _passwordController.text.trim(),
       );
@@ -87,20 +84,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
       final user = userCredential.user;
       if (user == null) throw Exception("User creation failed");
 
-      try {
-        await FirebaseFirestore.instance
-          .collection('users')
-          .doc(user.uid)
-          .set({
-        'userName': _nameController.text.trim(),
-        'userEmail': user.email, 
+      // 2) Auth displayName = Full Name (profile'da gözüksün)
+      await user.updateDisplayName(_fullNameController.text.trim());
+
+      // 3) Firestore users doc
+      await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
+        'fullName': _fullNameController.text.trim(),
+        'userName': _usernameController.text.trim(), // private username
+        'userEmail': user.email,
         'createdBy': user.uid,
         'createdAt': FieldValue.serverTimestamp(),
         'profilePhoto': null,
-        });
-      } catch (e) {
-        debugPrint("FIRESTORE ERROR: $e");
-      }
+      }, SetOptions(merge: true));
 
       if (!mounted) return;
 
@@ -122,23 +117,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
       );
     } on FirebaseAuthException catch (e) {
       String message = "Something went wrong";
+      if (e.code == 'email-already-in-use') message = "This email is already registered";
+      if (e.code == 'weak-password') message = "Password is too weak";
+      if (e.code == 'invalid-email') message = "Invalid email address";
 
-      if (e.code == 'email-already-in-use') {
-        message = "This email is already registered";
-      } else if (e.code == 'weak-password') {
-        message = "Password is too weak";
-      } else if (e.code == 'invalid-email') {
-        message = "Invalid email address";
-      }
-
-      if (!mounted) return;
-
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(message)));
-    } finally {
       if (mounted) {
-        setState(() => _isLoading = false);
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
       }
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
     }
   }
 
@@ -158,15 +145,23 @@ class _SignUpScreenState extends State<SignUpScreen> {
           child: Form(
             key: _formKey,
             autovalidateMode:
-                _submitted ? AutovalidateMode.always : AutovalidateMode.disabled,
+            _submitted ? AutovalidateMode.always : AutovalidateMode.disabled,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _buildLabel("User Name"),
+                _buildLabel("Full Name"),
                 TextFormField(
-                  controller: _nameController,
+                  controller: _fullNameController,
                   decoration: _buildInputDecoration("Name Surname"),
-                  validator: _validateName,
+                  validator: _validateFullName,
+                ),
+                const SizedBox(height: 20),
+
+                _buildLabel("Username (Private)"),
+                TextFormField(
+                  controller: _usernameController,
+                  decoration: _buildInputDecoration("username123"),
+                  validator: _validateUsername,
                 ),
                 const SizedBox(height: 20),
 
@@ -174,8 +169,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 TextFormField(
                   controller: _emailController,
                   keyboardType: TextInputType.emailAddress,
-                  decoration:
-                      _buildInputDecoration("name@sabanciuniv.edu"),
+                  decoration: _buildInputDecoration("name@sabanciuniv.edu"),
                   validator: _validateEmail,
                 ),
                 const SizedBox(height: 20),
@@ -186,11 +180,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   obscureText: !_showPassword1,
                   decoration: _buildInputDecoration("********").copyWith(
                     suffixIcon: IconButton(
-                      icon: Icon(_showPassword1
-                          ? Icons.visibility
-                          : Icons.visibility_off),
-                      onPressed: () =>
-                          setState(() => _showPassword1 = !_showPassword1),
+                      icon: Icon(_showPassword1 ? Icons.visibility : Icons.visibility_off),
+                      onPressed: () => setState(() => _showPassword1 = !_showPassword1),
                     ),
                   ),
                   validator: _validatePassword,
@@ -203,11 +194,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   obscureText: !_showPassword2,
                   decoration: _buildInputDecoration("********").copyWith(
                     suffixIcon: IconButton(
-                      icon: Icon(_showPassword2
-                          ? Icons.visibility
-                          : Icons.visibility_off),
-                      onPressed: () =>
-                          setState(() => _showPassword2 = !_showPassword2),
+                      icon: Icon(_showPassword2 ? Icons.visibility : Icons.visibility_off),
+                      onPressed: () => setState(() => _showPassword2 = !_showPassword2),
                     ),
                   ),
                   validator: _validateConfirmPassword,
@@ -221,14 +209,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     onPressed: _isLoading ? null : _handleSubmit,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.primary,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                     ),
                     child: _isLoading
                         ? const CircularProgressIndicator(color: Colors.white)
-                        : const Text("Register",
-                            style: AppTextStyles.buttonText),
+                        : const Text("Register", style: AppTextStyles.buttonText),
                   ),
                 ),
               ],
@@ -249,8 +234,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   InputDecoration _buildInputDecoration(String hint) {
     return InputDecoration(
       hintText: hint,
-      contentPadding:
-          const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       border: OutlineInputBorder(borderRadius: BorderRadius.circular(6)),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(6),

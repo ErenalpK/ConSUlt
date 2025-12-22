@@ -107,7 +107,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 key: _formKey,
                 child: Column(
                   children: [
-                    /// EMAIL
+
                     TextFormField(
                       controller: _emailController,
                       decoration: InputDecoration(
@@ -132,7 +132,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                     const SizedBox(height: 15),
 
-                    /// PASSWORD
+
                     TextFormField(
                       controller: _passwordController,
                       obscureText: true,
