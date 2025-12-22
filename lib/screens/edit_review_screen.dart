@@ -91,10 +91,10 @@ class _EditReviewScreenState extends State<EditReviewScreen> {
               onPressed: _isLoading ? null : _save,
               child: _isLoading
                   ? const SizedBox(
-                      height: 20,
-                      width: 20,
-                      child: CircularProgressIndicator(strokeWidth: 2),
-                    )
+                height: 20,
+                width: 20,
+                child: CircularProgressIndicator(strokeWidth: 2),
+              )
                   : const Text("Save"),
             ),
           ],
@@ -103,4 +103,3 @@ class _EditReviewScreenState extends State<EditReviewScreen> {
     );
   }
 }
-
