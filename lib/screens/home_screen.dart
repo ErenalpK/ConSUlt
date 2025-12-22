@@ -1,14 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../utils/styles.dart';
 import '../widgets/faculty_card.dart';
 import '../widgets/bottom_nav_bar.dart';
+import '../providers/bottom_nav_provider.dart';
 import 'program_codes_screen.dart';
 import 'search_courses_screen.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
   final List<String> faculties = const ['FENS', 'FMAN', 'FASS'];
+
+  @override
+  void initState() {
+    super.initState();
+    // Ekran açıldığında index'i ayarla
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final bottomNav = Provider.of<BottomNavProvider>(context, listen: false);
+      bottomNav.changeIndex(0);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -74,7 +91,7 @@ class HomeScreen extends StatelessWidget {
       ),
 
 
-      bottomNavigationBar: const CustomBottomNavBar(currentIndex: 0),
+      bottomNavigationBar: const CustomBottomNavBar(),
     );
   }
 }
