@@ -74,7 +74,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     setState(() => _isLoading = true);
 
     try {
-      // 1) AUTH
+   
       final userCredential =
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: _emailController.text.trim(),
@@ -84,13 +84,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
       final user = userCredential.user;
       if (user == null) throw Exception("User creation failed");
 
-      // 2) Auth displayName = Full Name (profile'da gözüksün)
+      
       await user.updateDisplayName(_fullNameController.text.trim());
 
-      // 3) Firestore users doc
+    
       await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
         'fullName': _fullNameController.text.trim(),
-        'userName': _usernameController.text.trim(), // private username
+        'userName': _usernameController.text.trim(), 
         'userEmail': user.email,
         'createdBy': user.uid,
         'createdAt': FieldValue.serverTimestamp(),
