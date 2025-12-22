@@ -91,10 +91,10 @@ class ProgramCodesScreen extends StatelessWidget {
             );
           }
 
-          // Get unique departments (program codes) - sadece büyük harfli document ID'lere sahip dersleri al
+          
           final Set<String> programCodes = {};
           for (var doc in snapshot.data!.docs) {
-            // Sadece büyük harfli document ID'lere sahip dersleri al
+           
             if (doc.id == doc.id.toUpperCase()) {
               final dept = doc['department'] as String?;
               if (dept != null && dept.isNotEmpty) {
