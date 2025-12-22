@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../providers/review_provider.dart';
+import '../utils/styles.dart';
 
 class AddReviewScreen extends StatefulWidget {
   final String courseId;
@@ -40,7 +41,11 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Add Comment")),
+      backgroundColor: AppColors.background,
+      appBar: AppBar(
+        title: const Text("Add Comment", style: AppTextStyles.appBarTitle),
+        backgroundColor: AppColors.surface,
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
