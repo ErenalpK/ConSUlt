@@ -17,7 +17,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void initState() {
     super.initState();
-    // Ekran açıldığında index'i ayarla
+   
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final bottomNav = Provider.of<BottomNavProvider>(context, listen: false);
       bottomNav.changeIndex(3);
@@ -504,7 +504,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                   final userId = user.uid;
 
-                  // 1. Delete all favorite courses (subcollection)
+                  //  Delete all favorite courses 
                   final favoritesSnapshot = await FirebaseFirestore.instance
                       .collection('users')
                       .doc(userId)
@@ -519,7 +519,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     await batch1.commit();
                   }
 
-                  // 2. Delete all comments/reviews created by user
+                  //  Delete all comments/reviews created by user
                   final commentsSnapshot = await FirebaseFirestore.instance
                       .collection('comments')
                       .where('createdBy', isEqualTo: userId)
@@ -533,13 +533,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     await batch2.commit();
                   }
 
-                  // 3. Delete user document
+                  //  Delete user document
                   await FirebaseFirestore.instance
                       .collection('users')
                       .doc(userId)
                       .delete();
 
-                  // 4. Delete Firebase Auth account
+                  //  Delete Firebase Auth account
                   await user.delete();
 
                   if (context.mounted) {
