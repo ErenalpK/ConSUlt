@@ -22,3 +22,10 @@ The main purpose of the app is to create a platform where students can share and
 This demo video showcases the main features of **ConSUlt**
 
 [Watch the demo video](https://drive.google.com/file/d/1wx8iNaAHnmiva49eQ3tYJJGYSz-nN_ZH/view?usp=share_link)
+
+##  Final Demo Video
+
+This final demo video showcases the main features of **ConSUlt**
+
+[Watch the demo video](https://drive.google.com/file/d/1DeScy9TMbhNH-_SZD5qFR2UlRbKTRs34/view?usp=sharing)
+
