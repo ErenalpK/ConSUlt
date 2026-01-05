@@ -27,5 +27,5 @@ This demo video showcases the main features of **ConSUlt**
 
 This final demo video showcases the main features of **ConSUlt**
 
-[Watch the demo video](https://drive.google.com/file/d/1DeScy9TMbhNH-_SZD5qFR2UlRbKTRs34/view?usp=sharing)
+[Watch the final demo video](https://drive.google.com/file/d/1DeScy9TMbhNH-_SZD5qFR2UlRbKTRs34/view?usp=sharing)
 
