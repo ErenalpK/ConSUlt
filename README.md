@@ -14,7 +14,7 @@ The main purpose of the app is to create a platform where students can share and
 | Mehmet Pekpak |32471| Documentation & Submission Lead  |
 | Selim Serhat Yılmaz |32687| Testing & Quality Assurance Lead |
 | Görkem Kocamanoğlu|34117| Integration & Repository Lead |
-| Beril Nur Serbest|22630| Presentation & Communication Lead |
+| Beril Nur Serbest|22630| Backend & Firebase Integration Lead |
 
 
 ##  Demo Video
